@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+# Parses out the css classes from the first file
+# Returns any classes that couldn't be found in the path provided as the second argument
+
+TMP_FILE=/tmp/css-class-check.tmp
+
+grep -oP '\.\K([\w-]+)(?=.*{)' $1 | sort | uniq > $TMP_FILE
+grep -orFf $TMP_FILE $2 | grep -v $1 | awk -F ':' '{ print $2 }' | sort | uniq | grep -vxf - $TMP_FILE
